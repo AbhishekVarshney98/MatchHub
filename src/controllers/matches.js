@@ -1,6 +1,6 @@
 const Match = require('../models/matchModel');
 
-exports.showMatches = async(req,res,next) => {
+const showMatches = async(req,res,next) => {
     
 
     try {
@@ -12,7 +12,7 @@ exports.showMatches = async(req,res,next) => {
     }
   };
 
-exports.postMatch = async (req,res,next) => {
+const postMatch = async (req,res,next) => {
     try{
         
         const {date,teams,venue}= req.body;
@@ -33,7 +33,7 @@ exports.postMatch = async (req,res,next) => {
     }
 };
 
-exports.putMatch = async (req, res, next) => {
+const putMatch = async (req, res, next) => {
     const matchId = req.params.id;
     const { playerOfMatch, matchResult } = req.body;
 
@@ -57,7 +57,7 @@ exports.putMatch = async (req, res, next) => {
 };
 
 
-exports.getMatchesByDate = async (req, res, next) => {
+const getMatchesByDate = async (req, res, next) => {
     const date = new Date(req.params.date);
     // console.log(date)
   
@@ -76,7 +76,7 @@ exports.getMatchesByDate = async (req, res, next) => {
   };
 
 
-exports.getMatchById = async (req, res, next) => {
+const getMatchById = async (req, res, next) => {
     const matchId = req.params.id;
     
     try {
@@ -94,3 +94,4 @@ exports.getMatchById = async (req, res, next) => {
   };
 
 
+module.exports = {showMatches, postMatch, putMatch, getMatchesByDate, getMatchById}
