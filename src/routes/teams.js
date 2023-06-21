@@ -5,7 +5,7 @@ const router = express.Router();
 const teamController = require('../controllers/teams');
 
 
-
+//Routes
 router.get('/showteams', teamController.showTeams);
 
 router.post('/team',teamController.postTeams);

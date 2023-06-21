@@ -1,8 +1,8 @@
 const Player = require('../models/playerModel');
 
-const showPlayers = async(req,res,next) => {
-    
 
+//fetch all players data
+const showPlayers = async(req,res,next) => {
     try {
       const players = await Player.find();
       res.json(players);
@@ -13,7 +13,7 @@ const showPlayers = async(req,res,next) => {
   };
 
 
-
+//post function to add a new player
 const postPlayer = async (req,res,next) => {
     try{
         
@@ -28,8 +28,8 @@ const postPlayer = async (req,res,next) => {
     res.status(201).json(savedPlayer);
     }
     catch (error){
-        console.log('errpr creating player', error);
-        res.status(500).json({error : "Failed to  create a player"});
+        console.log('Error creating player', error);
+        res.status(500).json({error : "Failed to create a player"});
     }
 };
 

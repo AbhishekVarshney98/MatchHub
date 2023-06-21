@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+
+//players model schema
 const playerSchema = new mongoose.Schema({
   name: {
     type: String,

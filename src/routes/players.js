@@ -5,8 +5,8 @@ const router = express.Router();
 const playerController = require('../controllers/players');
 
 
-
-router.get('/showPlayers', playerController.showPlayers);
+//Routes
+router.get('/showplayers', playerController.showPlayers);
 
 router.post('/player',playerController.postPlayer)
 

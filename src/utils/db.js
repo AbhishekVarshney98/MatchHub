@@ -6,7 +6,7 @@ const url = process.env.MONGO_URI;
 // Database Name
 const dbName = 'Matchhub';
 
-
+//function to establish DB connection
 const connectDB = async () => {
   try {
     await mongoose.connect(url, {

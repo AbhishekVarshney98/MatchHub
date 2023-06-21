@@ -1,9 +1,10 @@
 const Match = require('../models/matchModel');
 const Team = require('../models/teamModel');
 
-exports.showTeams = async(req,res,next) => {
-    
 
+//fetch list of all teams 
+const showTeams = async(req,res,next) => {
+    
     try {
       const teams = await Team.find().populate('players', 'name');
       res.json(teams);
@@ -13,13 +14,15 @@ exports.showTeams = async(req,res,next) => {
     }
   };
 
-exports.postTeams = async (req,res,next) => {
+
+//create a new team with details
+const postTeams = async (req,res,next) => {
     try{
         
-        const {name, players,totalMatchesPlayed,wins,losses,yies}= req.body;
+        const {name, players, totalMatchesPlayed, wins, losses, ties}= req.body;
         
         const team = new Team({
-            name, players,totalMatchesPlayed,wins,losses
+            name, players,totalMatchesPlayed,wins,losses,ties
         });
 
     const savedTeam = await team.save();
@@ -27,12 +30,14 @@ exports.postTeams = async (req,res,next) => {
     res.status(201).json(savedTeam);
     }
     catch (error){
-        console.log('errpr creating team', error);
-        res.status(500).json({error : "Failed to  create a team"});
+        console.log('Error creating team', error);
+        res.status(500).json({error : "Failed to create a team"});
     }
 };
 
-exports.getTeamPastMatches = async(req,res,next) => {
+
+//Get team's past matches using Id
+const getTeamPastMatches = async(req,res,next) => {
     try{
         const teamId = req.params.id;
 
@@ -51,12 +56,14 @@ exports.getTeamPastMatches = async(req,res,next) => {
        
     }
     catch(error) {
-        console.log('team performance fetching error', error);
-        res.status(500).json({error: "Failed to load team performance"});
+        console.log('Team fetching error', error);
+        res.status(500).json({error: "Failed to load team past matches"});
     }
 }
 
-exports.getTeamPerformance = async (req, res, next) => {
+
+//fetch team's performance details
+const getTeamPerformance = async (req, res, next) => {
     const teamId = req.params.id;
     
     try {
@@ -68,20 +75,21 @@ exports.getTeamPerformance = async (req, res, next) => {
   
       res.json({
         "Team Name": team.name,
-        "Team Natches Played": team.wins + team.losses + team.ties,
+        "Team Matches Played": team.wins + team.losses + team.ties,
         "Team Wins": team.wins,
         "Team Losses": team.losses,
         "Team Ties": team.ties
 
     });
     } catch (error) {
-      console.error('Error retrieving matches:', error);
-      res.status(500).json({ error: 'Failed to retrieve matches' });
+      console.error('Error retrieving details:', error);
+      res.status(500).json({ error: 'Failed to retrieve details' });
     }
   };
 
 
-  exports.editTeam = async (req, res, next) => {
+  //put function to add win, losses and ties for a team
+  const editTeam = async (req, res, next) => {
     const teamId = req.params.id;
     const { wins, losses, ties } = req.body;
 
@@ -95,6 +103,7 @@ exports.getTeamPerformance = async (req, res, next) => {
         team.wins = wins;
         team.losses = losses;
         team.ties = ties;
+        team.totalMatchesPlayed = wins + losses + ties;
 
         const updatedTeam = await team.save();
 
@@ -104,3 +113,6 @@ exports.getTeamPerformance = async (req, res, next) => {
         res.status(500).json({ error: 'Failed to update team' });
   }
 };
+
+
+module.exports = {showTeams, postTeams, getTeamPerformance, getTeamPastMatches, editTeam}
