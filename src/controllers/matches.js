@@ -3,7 +3,7 @@ const Match = require('../models/matchModel');
 //fetch all matches
 const showMatches = async(req,res,next) => {
     try {
-      const matches = await Match.find().populate({path: 'teams', select:'name', populate:{path:'players', select:'name'}});
+      const matches = await Match.find().populate({path: 'teams', select:'name', populate:{path:'players', select:'name'}}).populate({path: 'playerOfMatch', select: 'name'});
       res.json(matches);
     } 
     catch (error) {
@@ -18,11 +18,15 @@ const postMatch = async (req,res,next) => {
     try{
         
         const {date,teams,venue}= req.body;
+        const playerOfMatch = req.body.playerOfMatch || null;
+        const matchResult = req.body.matchResult || null;
         
         const match = new Match({
             date,
             teams,
-            venue
+            venue,
+            playerOfMatch,
+            matchResult
         });
 
     const savedMatch = await match.save();
@@ -98,6 +102,45 @@ const getMatchById = async (req, res, next) => {
       res.status(500).json({ error: 'Failed to retrieve matches' });
     }
   };
+
+
+//putMatch updated function to update wins and losses of the winning team
+// const putMatch = async (req, res, next) => {
+//   const matchId = req.params.id;
+//   const { playerOfMatch, matchResult } = req.body;
+
+//   try {
+//       const match = await Match.findById(matchId);
+
+//       if (!match) {
+//           return res.status(404).json({ error: 'Match not found' });
+//       }
+
+//       // Update player of the match and match result in the match document
+//       match.playerOfMatch = playerOfMatch;
+//       match.matchResult = matchResult;
+
+//       // Save the updated match document
+//       const updatedMatch = await match.save();
+
+//       // Update the wins of the corresponding team in the teams database
+//       const team = await Team.findOne({ teamName: matchResult });
+
+//       if (!team) {
+//           return res.status(404).json({ error: 'Team not found' });
+//       }
+
+//       team.wins += 1;
+
+//       // Save the updated team document
+//       const updatedTeam = await team.save();
+
+//       res.json({ match: updatedMatch, team: updatedTeam });
+//   } catch (error) {
+//       console.error('Error updating match:', error);
+//       res.status(500).json({ error: 'Failed to update match' });
+//   }
+// };
 
 
 module.exports = {showMatches, postMatch, putMatch, getMatchesByDate, getMatchById}
