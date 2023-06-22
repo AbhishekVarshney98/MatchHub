@@ -4,7 +4,7 @@ const Match = require('../models/matchModel');
 const showMatches = async(req,res,next) => {
     try {
       const matches = await Match.find().populate({path: 'teams', select:'name', populate:{path:'players', select:'name'}}).populate({path: 'playerOfMatch', select: 'name'});
-      res.json(matches);
+      return res.json(matches);
     } 
     catch (error) {
       console.error('Error retrieving matches:', error);
