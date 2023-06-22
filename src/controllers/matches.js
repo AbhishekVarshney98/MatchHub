@@ -90,7 +90,7 @@ const getMatchById = async (req, res, next) => {
     const matchId = req.params.id;
     
     try {
-        const match = await Match.findById(matchId);
+        const match = await Match.findById(matchId).populate({path: 'teams', select:'name', populate:{path:'players', select:'name'}}).populate({path: 'playerOfMatch', select: 'name'});
   
       if (!match) {
         return res.status(404).json({ error: 'No matches found ' });
